@@ -61,7 +61,7 @@ public class SinglePlayerGame {
          * @return vrai si le dernier lancer à terminé le tour précédent
          */
 	public boolean hasCompletedFrame() {
-		return currentFrame.getBallsThrown() == 0;
+		return isFinished() || currentFrame.getBallsThrown() == 0;
 	}
 	
 	/**
