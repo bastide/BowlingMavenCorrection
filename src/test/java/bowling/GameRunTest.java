@@ -1,14 +1,16 @@
 package bowling;
 
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 
 public class GameRunTest {
 
 	private SinglePlayerGame game;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		game = new SinglePlayerGame();
 	}
@@ -18,32 +20,43 @@ public class GameRunTest {
 	 */
 	@Test
 	public void testBeginGame() {
-		assertEquals("On doit commencer au tour   n°1", 1, game.getFrameNumber());
-		assertEquals("On doit commencer à la boule n°1", 1, game.getNextBallNumber());
+		assertEquals(1, game.getFrameNumber(),
+                        "On doit commencer au tour   n°1");
+		assertEquals(1, game.getNextBallNumber(),
+                        "On doit commencer à la boule n°1");
 	}
 
 	@Test
 	public void testAllOnes() {
 		rollMany(20, 1);
-		assertEquals("On a fini, le n° de tour doit être 0", 0, game.getFrameNumber());
-		assertTrue("Le tour courant doit être terminé", game.hasCompletedFrame());
-		assertTrue("Le jeu doit être terminé", game.isFinished());
+		assertEquals(0, game.getFrameNumber(),
+                        "On a fini, le n° de tour doit être 0");
+		assertTrue(game.hasCompletedFrame(),
+                        "Le tour courant doit être terminé");
+		assertTrue(game.isFinished(),
+                        "Le jeu doit être terminé");
 	}
 
 	@Test
 	public void testOneSpare()  {
 		rollSpare(); 
-		assertTrue("Le tour courant doit être terminé", game.hasCompletedFrame());
-		assertEquals("On a fini le premier tour, le n° de tour doit être 2", 2, game.getFrameNumber());
-		assertEquals("On doit commencer le tour à la boule n°1", 1, game.getNextBallNumber());
+		assertTrue(game.hasCompletedFrame(),
+                        "Le tour courant doit être terminé");
+		assertEquals(2, game.getFrameNumber(),
+                        "On a fini le premier tour, le n° de tour doit être 2");
+		assertEquals(1, game.getNextBallNumber(),
+                        "On doit commencer le tour à la boule n°1");
 	}
 
 	@Test
 	public void testOneStrike()  {
 		rollStrike(); // 10 + 7
-		assertTrue("Le tour courant doit être terminé", game.hasCompletedFrame());
-		assertEquals("On a fini le premier tour, le n° de tour doit être 2", 2, game.getFrameNumber());
-		assertEquals("On doit commencer le tour à la boule n°1", 1, game.getNextBallNumber());
+		assertTrue(game.hasCompletedFrame(),
+                        "Le tour courant doit être terminé");
+		assertEquals(2, game.getFrameNumber(),
+                        "On a fini le premier tour, le n° de tour doit être 2");
+		assertEquals(1, game.getNextBallNumber(),
+                        "On doit commencer le tour à la boule n°1");
 	}
 
 

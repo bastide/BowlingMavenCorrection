@@ -1,8 +1,10 @@
 package bowling;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Before;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -11,7 +13,7 @@ import org.junit.Before;
 public class OtherTest {
 	private SinglePlayerGame game;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		game = new SinglePlayerGame();
 	}
@@ -19,11 +21,13 @@ public class OtherTest {
 	/**
 	 * Si on envoie toutes les 20 boules dans la rigole, le score final est 0
 	 */
-	@Test( expected = UnsupportedOperationException.class )
+	@Test
 	public void unLancerDeTrop() {
+            assertThrows(UnsupportedOperationException.class, () -> {
 		rollMany(20, 0); // Le jeu est fini
 		// On doit avoir une exception
-		game.lancer(0);
+		game.lancer(0);   
+            }, "Le jeu est fini, on doit avoir une exception");
 	}
 	
 	@Test
