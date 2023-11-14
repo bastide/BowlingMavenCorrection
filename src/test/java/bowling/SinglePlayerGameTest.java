@@ -1,100 +1,101 @@
 package bowling;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+class SinglePlayerGameTest {
 
-public class SinglePlayerGameTest {
-
-	private SinglePlayerGame game;
+	private PartieMonoJoueur partie;
 
 	@BeforeEach
 	public void setUp() {
-		game = new SinglePlayerGame();
+		partie = new PartieMonoJoueur();
 	}
 
 	/**
 	 * Si on envoie toutes les 20 boules dans la rigole, le score final est 0
 	 */
 	@Test
-	public void testGutterGame() {
-		rollMany(20, 0);
-		assertEquals(0, game.score());
-		assertTrue(game.isFinished());
+	void toutDansLaRigole() {
+		lancerPlusieurs(20, 0);
+		assertEquals(0, partie.score());
+		assertTrue(partie.estTerminee());
 	}
 
 	@Test
-	public void testAllOnes() {
-		rollMany(20, 1);
-		assertEquals(20, game.score());
-		assertTrue(game.isFinished());	}
-
-	@Test
-	public void testOneSpare()  {
-		rollSpare(); // 10 + 3
-		game.lancer(3); // 3
-		rollMany(17, 0); // 0
-		assertEquals(16, game.score());
-		assertTrue(game.isFinished());
+	void uneQuilleAChaqueLancer() {
+		lancerPlusieurs(20, 1);
+		assertEquals(20, partie.score());
+		assertTrue(partie.estTerminee());
 	}
 
 	@Test
-	public void testOneStrike()  {
-		rollStrike(); // 10 + 7
-		assertTrue(game.hasCompletedFrame());
-                assertEquals(1, game.getNextBallNumber());
-		game.lancer(3);
-		game.lancer(4);
-		assertTrue(game.hasCompletedFrame());
-		rollMany(16, 0);
-		assertEquals(24, game.score());
-		assertTrue(game.isFinished());
+	void unSpare() {
+		faireUnSpare(); // 10 + 3
+		partie.enregistreLancer(3); // 3
+		assertEquals(16, partie.score());
+		assertFalse(partie.estTerminee());
 	}
 
 	@Test
-	public void testPerfectGame() {
+	void deuxStrikes() {
+		faireUnStrike(); // 10 + 10 + 4
+		faireUnStrike(); // 10 + 4 + 3
+		partie.enregistreLancer(4); // 4
+		partie.enregistreLancer(3); // 3
+		assertEquals((10 + 10 + 4) + (10 + 4 + 3) + 4 + 3, partie.score());
+	}
+
+	@Test
+	void testOneStrike() {
+		faireUnStrike(); // 10 + 7
+		assertEquals(2, partie.numeroTourCourant(), "On doit être au tour n°2");
+		assertEquals(1, partie.numeroProchainLancer(), "On doit être à la boule n°1");
+		partie.enregistreLancer(3);
+		partie.enregistreLancer(4);
+		assertEquals(10 + 7 + 3 + 4, partie.score());
+		assertFalse(partie.estTerminee());
+	}
+
+	@Test
+	void testPerfectGame() {
 		// 12 boules à 10 points
-		rollMany(12, 10);
-		assertEquals(300, game.score());
-		assertTrue(game.isFinished());
+		lancerPlusieurs(12, 10);
+		assertEquals(300, partie.score());
+		assertTrue(partie.estTerminee());
 	}
 
 	@Test
-	public void testTypicalGame()  {
-		rollMany(8, 3); // 6 points aux 4 1° tours -> 24
-		assertTrue(game.hasCompletedFrame()); // Le dernier tir a terminé le cours précédent
-                assertEquals(5, game.getFrameNumber()); // On est au tour n° 5
-		rollStrike(); // 10 + 10
-		assertTrue(game.hasCompletedFrame());
-		rollSpare(); // 10 + 0
-		rollMany(6, 0); // 0 points aux 3 tours suivants
-		rollMany(3, 10); // 30 points au dernier tour
-		assertTrue(game.isFinished());
-		assertEquals(84, game.score());
+	void testTypicalGame() {
+		lancerPlusieurs(8, 3); // 6 points aux 4 1° tours -> 24
+		assertEquals(5, partie.numeroTourCourant()); // On est au tour n° 5
+		faireUnStrike(); // 10 + 10
+		faireUnSpare(); // 10 + 0
+		lancerPlusieurs(6, 0); // 0 points aux 3 tours suivants
+		lancerPlusieurs(3, 10); // 30 points au dernier tour
+		assertTrue(partie.estTerminee());
+		assertEquals(84, partie.score());
 	}
 
 	// Quelques methodes utilitaires pour faciliter l'écriture des tests
-	private void rollMany(int n, int pins) {
+	private boolean lancerPlusieurs(int n, int quilles) {
+		boolean leTourcontinue = false;
 		for (int i = 0; i < n; i++) {
-			game.lancer(pins);
+			leTourcontinue = partie.enregistreLancer(quilles);
 		}
+		return leTourcontinue;
 	}
 
-	private void rollSpare() {
-		game.lancer(7);
-		game.lancer(3);
+	private void faireUnSpare() {
+		partie.enregistreLancer(7);
+		partie.enregistreLancer(3);
 	}
 
-	private void rollStrike() {
-		game.lancer(10);
+	private void faireUnStrike() {
+		partie.enregistreLancer(10);
 	}
 
 }

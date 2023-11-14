@@ -1,79 +1,94 @@
 package bowling;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+class GameRunTest {
 
-public class GameRunTest {
-
-	private SinglePlayerGame game;
+	private PartieMonoJoueur partie;
 
 	@BeforeEach
 	public void setUp() {
-		game = new SinglePlayerGame();
+		partie = new PartieMonoJoueur();
+	}
+
+	@Test
+	void testBeginGame() {
+		assertEquals(1, partie.numeroTourCourant(),
+				"On doit commencer au tour n°1");
+		assertEquals(1, partie.numeroProchainLancer(),
+				"On doit commencer à la boule n°1");
+	}
+
+	@Test
+	void passeAuTourSuivant() {
+		assertTrue(partie.enregistreLancer(1), "Premier lancer, le tour continue");
+		assertFalse(partie.enregistreLancer(1), "Deuxième lancer, le tour est fini");
+		assertEquals(2, partie.numeroTourCourant(), "On doit être au tour n°2");
+		assertEquals(1, partie.numeroProchainLancer(), "On doit être à la boule n°1");
+	}
+
+	@Test
+	void testAllOnes() {
+		lancerPlusieurs(20, 1);
+		assertEquals(0, partie.numeroTourCourant(),
+				"On a fini, le n° de tour doit être 0");
+		assertTrue(partie.estTerminee(),
+				"Le jeu doit être terminé");
+	}
+
+	@Test
+	void testOneSpare() {
+		faireUnSpare();
+		assertEquals(2, partie.numeroTourCourant(),
+				"On a fini le premier tour, le n° de tour doit être 2");
+		assertEquals(1, partie.numeroProchainLancer(),
+				"On doit commencer le tour à la boule n°1");
+	}
+
+	@Test
+	void testOneStrike() {
+		faireUnStrike();
+
+		assertEquals(2, partie.numeroTourCourant(),
+				"On a fini le premier tour, le n° de tour doit être 2");
+		assertEquals(1, partie.numeroProchainLancer(),
+				"On doit commencer le tour à la boule n°1");
 	}
 
 	/**
-	 * Si on envoie toutes les 20 boules dans la rigole, le score final est 0
+	 * Pas plus de 20 boules dans un jeu
 	 */
 	@Test
-	public void testBeginGame() {
-		assertEquals(1, game.getFrameNumber(),
-                        "On doit commencer au tour   n°1");
-		assertEquals(1, game.getNextBallNumber(),
-                        "On doit commencer à la boule n°1");
-	}
+	void unLancerDeTrop() {
+		lancerPlusieurs(20, 0); // Le jeu est fini
 
-	@Test
-	public void testAllOnes() {
-		rollMany(20, 1);
-		assertEquals(0, game.getFrameNumber(),
-                        "On a fini, le n° de tour doit être 0");
-		assertTrue(game.hasCompletedFrame(),
-                        "Le tour courant doit être terminé");
-		assertTrue(game.isFinished(),
-                        "Le jeu doit être terminé");
+		assertThrows(IllegalStateException.class, () -> {
+			// On doit avoir une exception
+			partie.enregistreLancer(0);
+		}, "Le jeu est fini, on doit avoir une exception");
 	}
-
-	@Test
-	public void testOneSpare()  {
-		rollSpare(); 
-		assertTrue(game.hasCompletedFrame(),
-                        "Le tour courant doit être terminé");
-		assertEquals(2, game.getFrameNumber(),
-                        "On a fini le premier tour, le n° de tour doit être 2");
-		assertEquals(1, game.getNextBallNumber(),
-                        "On doit commencer le tour à la boule n°1");
-	}
-
-	@Test
-	public void testOneStrike()  {
-		rollStrike(); // 10 + 7
-		assertTrue(game.hasCompletedFrame(),
-                        "Le tour courant doit être terminé");
-		assertEquals(2, game.getFrameNumber(),
-                        "On a fini le premier tour, le n° de tour doit être 2");
-		assertEquals(1, game.getNextBallNumber(),
-                        "On doit commencer le tour à la boule n°1");
-	}
-
 
 	// Quelques methodes utilitaires pour faciliter l'écriture des tests
-	private void rollMany(int n, int pins) {
+	private boolean lancerPlusieurs(int n, int quilles) {
+		boolean leTourcontinue = false;
 		for (int i = 0; i < n; i++) {
-			game.lancer(pins);
+			leTourcontinue = partie.enregistreLancer(quilles);
 		}
+		return leTourcontinue;
 	}
 
-	private void rollSpare() {
-		game.lancer(7);
-		game.lancer(3);
+	private void faireUnSpare() {
+		partie.enregistreLancer(7);
+		partie.enregistreLancer(3);
 	}
 
-	private void rollStrike() {
-		game.lancer(10);
+	private void faireUnStrike() {
+		partie.enregistreLancer(10);
 	}
 
 }
