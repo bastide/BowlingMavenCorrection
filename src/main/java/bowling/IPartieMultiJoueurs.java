@@ -4,16 +4,16 @@ package bowling;
  *
  * @author rbastide
  */
-public interface PartieMultiJoueurs {
+public interface IPartieMultiJoueurs {
 	
 	/**
 	 * Démarre une nouvelle partie pour un groupe de joueurs
-	 * @param playerName un tableau des noms de joueurs (il faut au moins un joueur)
+	 * @param nomsDesJoueurs un tableau des noms de joueurs (il faut au moins un joueur)
 	 * @return une chaîne de caractères indiquant le prochain joueur,
 	 * de la forme "Prochain tir : joueur Bastide, tour n° 1, boule n° 1"
 	 * @throws java.lang.IllegalArgumentException si le tableau est vide ou null
 	 */
-	public String startNewGame(String[] playerName) throws IllegalArgumentException ;
+	public String demarreNouvellePartie(String[] nomsDesJoueurs) throws IllegalArgumentException ;
 	
 	/**
 	 * Enregistre le nombre de quilles abattues pour le joueur courant, dans le tour courant, pour la boule courante
@@ -27,11 +27,11 @@ public interface PartieMultiJoueurs {
 	
 	/**
 	 * Donne le score pour le joueur playerName
-	 * @param playerName le nom du joueur recherché
+	 * @param nomDuJoueur le nom du joueur recherché
 	 * @return le score pour ce joueur
 	 * @throws IllegalArgumentException si playerName ne joue pas dans cette partie
 	 */
-	public int scoreFor(String playerName) throws IllegalArgumentException;
+	public int scorePour(String nomDuJoueur) throws IllegalArgumentException;
 	
 	
 }
