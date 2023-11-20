@@ -29,7 +29,7 @@ public interface IPartieMultiJoueurs {
 	 * Donne le score pour le joueur playerName
 	 * @param nomDuJoueur le nom du joueur recherché
 	 * @return le score pour ce joueur
-	 * @throws IllegalArgumentException si playerName ne joue pas dans cette partie
+	 * @throws IllegalArgumentException si nomDuJoueur ne joue pas dans cette partie
 	 */
 	public int scorePour(String nomDuJoueur) throws IllegalArgumentException;
 	
