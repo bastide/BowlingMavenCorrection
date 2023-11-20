@@ -66,7 +66,7 @@ public class Tour {
 			throw new IllegalArgumentException("Max 10 points dans un tour");
 		}
 		if (boulesLancees > 1) {
-			throw new UnsupportedOperationException("Max 2 boules dans un tour normal");
+			throw new IllegalStateException("Max 2 boules dans un tour normal");
 		}
 
 		boulesLancees++;
