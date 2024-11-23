@@ -133,7 +133,7 @@ public class Tour {
 	/**
 	 * @return le tour suivant ce tour
 	 */
-	Tour next() {
+	Tour getSuivant() {
 		return suivant;
 	}
 

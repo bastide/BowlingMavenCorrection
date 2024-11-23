@@ -37,7 +37,7 @@ public class PartieMonoJoueur {
 
         tourCourant.enregistreLancer(nombreDeQuillesAbattues);
         if (tourCourant.estTermine()) {
-            tourCourant = tourCourant.next();
+            tourCourant = tourCourant.getSuivant();
         }
         return ! (this.estTerminee() || tourCourant.getBoulesLancees() == 0);
     }
