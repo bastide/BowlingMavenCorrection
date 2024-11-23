@@ -50,7 +50,7 @@ public class PartieMonoJoueur {
      * @return Le score du joueur
      */
     public int score() {
-        return premierTour.score();
+        return premierTour.scoreCumule();
     }
 
     /**

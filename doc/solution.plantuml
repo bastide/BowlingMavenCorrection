@@ -21,7 +21,7 @@ class Tour {
   +estUnSpare(): boolean
   +bonusPourStrike(): int
   +bonusPourSpare(): int
-  +score(): int
+  +scoreCumule(): int
   +toString(): String
 }
 

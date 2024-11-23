@@ -118,8 +118,8 @@ public class Tour {
 	/**
 	 * @return le score réalisé à partir de ce tour en tenant compte des bonus éventuels
 	 */
-	int score() {
-		int scoreDeCeTour = 0;
+	int scoreCumule() {
+		int scoreDeCeTour;
 		if (estUnStrike()) {
 			scoreDeCeTour = 10 + suivant.bonusPourStrike();
 		} else if (estUnSpare()) {
@@ -127,7 +127,7 @@ public class Tour {
 		} else {
 			scoreDeCeTour = quillesAbattuesLancer1 + quillesAbattuesLancer2;
 		}
-		return scoreDeCeTour + suivant.score();
+		return scoreDeCeTour + suivant.scoreCumule();
 	}
 
 	/**
